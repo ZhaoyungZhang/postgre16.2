@@ -332,7 +332,7 @@ StrategyGetBuffer(BufferAccessStrategy strategy, uint32 *buf_state, bool *from_r
 				trycounter = NBuffers;
 			}
 			else
-			{
+			{ 	// wtf lru ? 
 				/* Found a usable buffer */
 				if (strategy != NULL)
 					AddBufferToRing(strategy, buf);
