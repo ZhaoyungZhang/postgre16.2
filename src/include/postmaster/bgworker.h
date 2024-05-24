@@ -100,6 +100,21 @@ typedef struct BackgroundWorker
 	pid_t		bgw_notify_pid; /* SIGUSR1 this backend on start/stop */
 } BackgroundWorker;
 
+// typedef struct BackgroundWorker
+// {
+// 	char		bgw_name[BGW_MAXLEN];         /* 后台工作进程的名称 */
+// 	char		bgw_type[BGW_MAXLEN];         /* 后台工作进程的类型 */
+// 	int			bgw_flags;                    /* 设置进程的访问共享内存 数据库 */
+// 	BgWorkerStartTime bgw_start_time;         /* 标识postmaster在什么状态下启动bgworker */
+// 	int			bgw_restart_time;	           /* 重启时间(s),BGW_NEVER_RESTART表示不重启 */
+// 	char		bgw_library_name[BGW_MAXLEN]; /* 标识动态加载库的名称 */
+// 	char		bgw_function_name[BGW_MAXLEN];/* 标识入口函数的名称 */
+// 	Datum		bgw_main_arg;                 /* bgworker主函数的参数 */
+// 	char		bgw_extra[BGW_EXTRALEN];      /* 额外的数据 */
+// 	pid_t		bgw_notify_pid;               /* bgworker pid */
+// } BackgroundWorker;
+
+
 typedef enum BgwHandleStatus
 {
 	BGWH_STARTED,				/* worker is running */
