@@ -82,6 +82,15 @@ typedef struct BackgroundWorkerSlot
 	BackgroundWorker worker;
 } BackgroundWorkerSlot;
 
+// typedef struct BackgroundWorkerSlot
+// {
+//     bool		in_use;      // 标志该slot是否在使用
+//     bool		terminate;   // 标志是否终止该工作进程
+//     pid_t		pid;         // 进程ID，InvalidPid表示未启动，0表示已终止
+//     uint64		generation;  // 重用slot时增加
+//     BackgroundWorker worker; // bgworker
+// } BackgroundWorkerSlot;
+
 /*
  * In order to limit the total number of parallel workers (according to
  * max_parallel_workers GUC), we maintain the number of active parallel
@@ -99,6 +108,14 @@ typedef struct BackgroundWorkerArray
 	uint32		parallel_register_count;
 	uint32		parallel_terminate_count;
 	BackgroundWorkerSlot slot[FLEXIBLE_ARRAY_MEMBER];
+} BackgroundWorkerArray;
+
+typedef struct BackgroundWorkerArray
+{
+    int			total_slots;                // 总slot数
+    uint32		parallel_register_count;   // 已注册的并行工作进程数
+    uint32		parallel_terminate_count;  // 已终止的并行工作进程数
+    BackgroundWorkerSlot slot[FLEXIBLE_ARRAY_MEMBER]; // 灵活数组，存储所有的bgworker槽位
 } BackgroundWorkerArray;
 
 struct BackgroundWorkerHandle
