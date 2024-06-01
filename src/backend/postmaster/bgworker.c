@@ -110,13 +110,13 @@ typedef struct BackgroundWorkerArray
 	BackgroundWorkerSlot slot[FLEXIBLE_ARRAY_MEMBER];
 } BackgroundWorkerArray;
 
-typedef struct BackgroundWorkerArray
-{
-    int			total_slots;                // 总slot数
-    uint32		parallel_register_count;   // 已注册的并行工作进程数
-    uint32		parallel_terminate_count;  // 已终止的并行工作进程数
-    BackgroundWorkerSlot slot[FLEXIBLE_ARRAY_MEMBER]; // 灵活数组，存储所有的bgworker槽位
-} BackgroundWorkerArray;
+// typedef struct BackgroundWorkerArray
+// {
+//     int			total_slots;                // 总slot数
+//     uint32		parallel_register_count;   // 已注册的并行工作进程数
+//     uint32		parallel_terminate_count;  // 已终止的并行工作进程数
+//     BackgroundWorkerSlot slot[FLEXIBLE_ARRAY_MEMBER]; // 灵活数组，存储所有的bgworker槽位
+// } BackgroundWorkerArray;
 
 struct BackgroundWorkerHandle
 {
@@ -1245,6 +1245,40 @@ TerminateBackgroundWorker(BackgroundWorkerHandle *handle)
 	if (signal_postmaster)
 		SendPostmasterSignal(PMSIGNAL_BACKGROUND_WORKER_CHANGE);
 }
+
+// /*
+//  * Instruct the postmaster to terminate a background worker.
+//  *
+//  * Note that it's safe to do this without regard to whether the worker is
+//  * still running, or even if the worker may already have exited and been
+//  * unregistered.
+//  */
+// void
+// TerminateBackgroundWorker(BackgroundWorkerHandle *handle){
+//     BackgroundWorkerSlot *slot;
+//     bool signal_postmaster = false;
+
+//     Assert(handle->slot < max_worker_processes);
+//     slot = &BackgroundWorkerData->slot[handle->slot];
+
+//     // 获取独占锁，确保对后台工作进程槽的访问是线程安全的
+//     LWLockAcquire(BackgroundWorkerLock, LW_EXCLUSIVE);
+
+//     // 检查槽的 generation 是否与 handle 中的相同，以确保槽未被重用
+//     if (handle->generation == slot->generation)
+//     {
+//         // 设置 terminate 标志，通知需要终止该工作进程
+//         slot->terminate = true;
+//         signal_postmaster = true;
+//     }
+//     // 释放锁
+//     LWLockRelease(BackgroundWorkerLock);
+
+//     // 通知 postmaster bgworker状态更改
+//     if (signal_postmaster)
+//         SendPostmasterSignal(PMSIGNAL_BACKGROUND_WORKER_CHANGE);
+// }
+
 
 /*
  * Look up (and possibly load) a bgworker entry point function.
